@@ -1,4 +1,8 @@
-add_executable(Kalagh.out main.c)
+add_executable(Kalagh.out main.c
+    child.c child.h
+    mother.c mother.h
+    dish.c dish.h
+    )
 
 include_directories("${PROJECT_BINARY_DIR}")
 

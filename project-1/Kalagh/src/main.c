@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
+
+#include "dish.h"
 
 void print_begin_message(int m, int n, int t) {
     printf("There are %d baby crows, %d feeding pots, and %d feedings\n", m,
@@ -7,7 +10,7 @@ void print_begin_message(int m, int n, int t) {
 
 int main() {
     int m, n, t;
-    printf("Enter m, n, t\n");
+    printf("Enter m(dish plate), n(children), t(total dish number)\n");
     scanf("%d %d %d", &m, &n, &t);
 
     if(m == 0) {
@@ -23,4 +26,6 @@ int main() {
     }
 
     print_begin_message(m, n, t);
+
+    struct dish *dishes = malloc(sizeof(struct dish) * m);
 }

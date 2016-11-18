@@ -10,7 +10,7 @@
 
 struct child {
     int state;
-}
+};
 
 void child_eat(struct child *current_child);
 

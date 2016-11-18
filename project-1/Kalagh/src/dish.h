@@ -3,6 +3,6 @@
 
 struct dish {
     int state;
-}
+};
 
 #endif
