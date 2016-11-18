@@ -1,10 +1,27 @@
 #ifndef CHILD_H
 #define CHILD_H
 
-struct child {
-    int state = 0;
-}
+#define EAT_TIME 5
+#define PLAY_TIME 3
 
-void child_eat(struct child *current_child);
+#define EATING 1
+#define PLAYING 2
+#define HUNGRY 3
+
+struct child {
+    int state;
+    pthread_t thread;
+};
+
+struct child *children;
+
+void children_init(int size);
+void children_run(int i);
+void children_eat(int i);
+void children_finish_eating(int i);
+void children_ready_to_eat(int i);
+void children_delete();
+
+void *run(void *element);
 
 #endif

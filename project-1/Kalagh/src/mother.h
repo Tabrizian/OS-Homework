@@ -8,7 +8,7 @@
 
 struct mother {
     int state;
-}
+};
 
 void mother_fill_dishes(struct mother *mom, struct dish dishes[], int size);
 #endif
