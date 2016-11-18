@@ -8,7 +8,7 @@
 #include <sys/time.h>
 int b[10000];
 int *shm_array;
-int M=4;//when the subArray has less than M member we stop forking
+int M=1000;//when the subArray has less than M member we stop forking
 
 void merge_sort( int start, int end);
 void merge( int start, int mid, int end);
@@ -39,9 +39,20 @@ int main(int argc, char *argv[]){
 	/*
 	* Copy the data to be sorted from the local memory into the shared memory.
 	*/
+	
+	/* read inputs from file*/
+	FILE *fp;
+	fp = fopen("./test.txt", "r");
 	for (int i = 0; i < 10000; i++) {
-		shm_array[i] = rand() % 10000;
+		int a;
+		fscanf(fp, "%d", &a);
+		shm_array[i] =a;
 	}
+	fclose(fp);
+	
+	
+	
+	
 	
 	merge_sort( 0,9999);
 	/*for(int i=0;i<10000;i++){
@@ -66,6 +77,7 @@ void merge_sort( int start, int end){
     int lchild,rchild;
 	int length = end - start +1 ;
 	
+	// if the size of subArray is greater than M then we fork
 	if(length > M){
 	lchild = fork();
 
