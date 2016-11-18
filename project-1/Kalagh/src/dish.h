@@ -16,5 +16,6 @@ int dishes_get_state(int i);
 void dishes_set_state(int i, int state);
 int dishes_get_size();
 void dishes_delete();
+int dishes_get_full_dish();
 
 #endif

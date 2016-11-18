@@ -4,9 +4,11 @@
 #include <pthread.h>
 
 #include "child.h"
+#include "dish.h"
 
 void children_init(int size) {
     children = malloc(sizeof(struct child) * size);
+
 }
 
 void children_run(int i) {
@@ -18,15 +20,23 @@ void children_run(int i) {
 }
 
 void children_eat(int i) {
+    children[i].state = EATING;
+    sleep(EAT_TIME);
 
 }
 
 void children_finish_eating(int i) {
-
+    children[i].state = PLAYING;
+    children_play(i);
 }
 
 void children_ready_to_eat(int i) {
+    children[i].state = HUNGRY;
+}
 
+void children_play(int i) {
+    children[i].state = PLAYING;
+    sleep(PLAY_TIME);
 }
 
 void children_delete() {
@@ -36,7 +46,10 @@ void children_delete() {
 void *run(void *element) {
     int i = *((int *) element);
 
-    children_ready_to_eat(i);
-    children_eat(i);
-    children_finish_eating(i);
+    while(1) {
+        printf("Running child %d\n", i);
+        children_ready_to_eat(i);
+        children_eat(i);
+        children_finish_eating(i);
+    }
 }
