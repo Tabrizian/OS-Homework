@@ -2,11 +2,12 @@
 #include <stdlib.h>
 
 #include "dish.h"
+#include "mother.h"
 #include "child.h"
 
 void print_begin_message(int m, int n, int t) {
-    printf("There are %d baby crows, %d feeding pots, and %d feedings\n", m,
-            n, t);
+    printf("There are %d baby crows, %d feeding pots, and %d feedings\n", n,
+            m, t);
 }
 
 int main() {

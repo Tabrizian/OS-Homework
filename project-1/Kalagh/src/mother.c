@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <stdlib.h>
 #include <stdio.h>
 
 #include "dish.h"
@@ -25,10 +26,15 @@ void mother_fill_dishes() {
     int capacity = dishes_get_size();
 
     for(int i = 0; i < capacity; i++) {
+        printf("Food capacity: %d\n", food_capacity);
         if(food_capacity > 0) {
             sleep(FOOD_GATHER);
             dishes_set_state(i, FULL);
             printf("Mom collected food %d\n", i);
+            food_capacity--;
+        } else {
+            printf("No food left :(");
+            exit(0);
         }
     }
 

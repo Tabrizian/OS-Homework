@@ -7,6 +7,8 @@
 
 pthread_mutex_t mutex_set_state = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex_full_dishes = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t  condition_var   = PTHREAD_COND_INITIALIZER;
+
 
 int capacity;
 
@@ -40,8 +42,10 @@ void dishes_delete() {
 
 int dishes_get_full_dish() {
 
-    pthread_mutex_lock(&mutex_full_dishes);
     int return_value = -1;
+    pthread_mutex_lock(&mutex_full_dishes);
+
+    printf("We are inside the mutex\n");
     while(1) {
 
         for(int i = 0; i < capacity; i++) {
@@ -62,6 +66,7 @@ int dishes_get_full_dish() {
                 k++;
             }
         }
+
 
         if(k == capacity) {
             printf("Waking up mother to fill the dishes\n");
