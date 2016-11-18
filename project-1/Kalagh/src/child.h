@@ -17,7 +17,7 @@ struct child *children;
 
 void children_init(int size);
 void children_run(int i);
-void children_eat(int i);
+void children_eat(int i, int dish_id);
 void children_finish_eating(int i);
 void children_ready_to_eat(int i);
 void children_play(int i);

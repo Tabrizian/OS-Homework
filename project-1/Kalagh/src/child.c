@@ -6,6 +6,7 @@
 #include "child.h"
 #include "dish.h"
 
+
 void children_init(int size) {
     children = malloc(sizeof(struct child) * size);
 
@@ -19,10 +20,12 @@ void children_run(int i) {
     }
 }
 
-void children_eat(int i) {
+void children_eat(int i, int dish_id) {
     children[i].state = EATING;
+    dishes_set_state(dish_id, HALF);
     sleep(EAT_TIME);
-
+    dishes_set_state(dish_id, EMPTY);
+    children_finish_eating(i);
 }
 
 void children_finish_eating(int i) {
@@ -32,6 +35,9 @@ void children_finish_eating(int i) {
 
 void children_ready_to_eat(int i) {
     children[i].state = HUNGRY;
+    int dish_id = dishes_get_full_dish();
+    children_eat(i, dish_id);
+
 }
 
 void children_play(int i) {
@@ -49,7 +55,5 @@ void *run(void *element) {
     while(1) {
         printf("Running child %d\n", i);
         children_ready_to_eat(i);
-        children_eat(i);
-        children_finish_eating(i);
     }
 }
