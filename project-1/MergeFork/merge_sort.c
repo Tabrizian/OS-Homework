@@ -5,20 +5,57 @@
 #include <sys/wait.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-int a[10] = { 99, 14, 19, 26, 27, 31, 33, 35, 42, 44 };
-int b[10];
-
+#include <sys/time.h>
+int b[10000];
+int *shm_array;
+int M=4;//when the subArray has less than M member we stop forking
 
 void merge_sort( int start, int end);
 void merge( int start, int mid, int end);
 
 
 int main(int argc, char *argv[]){
+	/* for Measuring time*/
+	struct timeval start, end;
+    long mtime, seconds, useconds;    
+    gettimeofday(&start, NULL);
+	/* starting declare shared Memory*/
+	key_t key;/* key to be passed to shmget() */ 
+	int shmflg;/* shmflg to be passed to shmget() */ 
+	int shmid;/* return value from shmget() */ 
+	int size;/* size to be passed to shmget() */ 
+	key = IPC_PRIVATE;
+	/* Create the shared memory segment. */
+	size = 10000 * sizeof(int);
+	if ((shmid = shmget(key, size, IPC_CREAT| 0660)) == -1) {
+		perror("shmget");
+		exit(1);
+	}
+	/* Attached to the shared memory segment in order to use it. */
+	if ((shm_array = shmat(shmid, NULL, 0)) == (int *) -1) {
+		perror("shmat");
+		exit(1);
+	}
+	/*
+	* Copy the data to be sorted from the local memory into the shared memory.
+	*/
+	for (int i = 0; i < 10000; i++) {
+		shm_array[i] = rand() % 10000;
+	}
+	
+	merge_sort( 0,9999);
+	/*for(int i=0;i<10000;i++){
+        	printf("%d is %d\n",i,shm_array[i]);
+	}*/
+	gettimeofday(&end, NULL);
 
-    merge_sort( 0,9);
-    for(int i=0;i<10;i++){
-        printf("%d is %d\n",i,a[i]);
-    }
+    seconds  = end.tv_sec  - start.tv_sec;
+    useconds = end.tv_usec - start.tv_usec;
+
+    mtime = ((seconds) * 1000 + useconds/1000.0) + 0.5;
+
+    printf("Elapsed time: %ld milliseconds\n", mtime);
+
     return 0;
 }
 
@@ -27,7 +64,10 @@ void merge_sort( int start, int end){
     int mid = (start+end)/2;
     int status;
     int lchild,rchild;
-    lchild = fork();
+	int length = end - start +1 ;
+	
+	if(length > M){
+	lchild = fork();
 
     if (lchild < 0) {
         perror("fork");
@@ -50,24 +90,30 @@ void merge_sort( int start, int end){
     waitpid(lchild, &status, 0);
     waitpid(rchild, &status, 0);
     merge( start, mid, end);
+	}
+	else{
+	merge_sort( start, mid);
+	merge_sort( mid+1, end);
+	merge( start, mid, end);
+	}
 }
 
 void merge(int start, int mid, int end) {
     int l1, l2, i;
 
     for(l1 = start, l2 = mid + 1, i = start; l1 <= mid && l2 <= end; i++) {
-        if(a[l1] <= a[l2])
-            b[i] = a[l1++];
+        if(shm_array[l1] <= shm_array[l2])
+            b[i] = shm_array[l1++];
         else
-            b[i] = a[l2++];
+            b[i] = shm_array[l2++];
     }
 
     while(l1 <= mid)
-        b[i++] = a[l1++];
+        b[i++] = shm_array[l1++];
 
     while(l2 <= end)
-        b[i++] = a[l2++];
+        b[i++] = shm_array[l2++];
 
     for(i = start; i <= end; i++)
-        a[i] = b[i];
+        shm_array[i] = b[i];
 }
