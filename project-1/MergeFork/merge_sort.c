@@ -5,16 +5,21 @@
 #include <sys/wait.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#include <sys/time.h>
 int b[10000];
 int *shm_array;
-int M=10;//when the subArray has less than M member we stop forking
+int M=4;//when the subArray has less than M member we stop forking
 
 void merge_sort( int start, int end);
 void merge( int start, int mid, int end);
 
 
 int main(int argc, char *argv[]){
-	
+	/* for Measuring time*/
+	struct timeval start, end;
+    long mtime, seconds, useconds;    
+    gettimeofday(&start, NULL);
+	/* starting declare shared Memory*/
 	key_t key;/* key to be passed to shmget() */ 
 	int shmflg;/* shmflg to be passed to shmget() */ 
 	int shmid;/* return value from shmget() */ 
@@ -39,11 +44,20 @@ int main(int argc, char *argv[]){
 	}
 	
 	merge_sort( 0,9999);
-	for(int i=0;i<10000;i++){
+	/*for(int i=0;i<10000;i++){
         	printf("%d is %d\n",i,shm_array[i]);
-	}
+	}*/
+	gettimeofday(&end, NULL);
+
+    seconds  = end.tv_sec  - start.tv_sec;
+    useconds = end.tv_usec - start.tv_usec;
+
+    mtime = ((seconds) * 1000 + useconds/1000.0) + 0.5;
+
+    printf("Elapsed time: %ld milliseconds\n", mtime);
+
     return 0;
-	}
+}
 
 void merge_sort( int start, int end){
     if(start >= end)return;
