@@ -10,7 +10,7 @@ struct mother {
 
 struct mother mom;
 
-void mother_init();
+void mother_init(int food);
 void mother_goto_sleep();
 void mother_food_ready();
 void mother_fill_dishes();

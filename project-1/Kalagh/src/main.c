@@ -30,6 +30,7 @@ int main() {
 
     dishes_init(m);
     children_init(n);
+    mother_init(t);
 
     for(int i = 0; i < n; i++) {
         children_run(i);

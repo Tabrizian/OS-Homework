@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <stdio.h>
 
 #include "child.h"
 #include "dish.h"
@@ -24,6 +25,7 @@ void children_run(int i) {
 
 void children_eat(int i, int dish_id) {
     children[i].state = EATING;
+    printf("Children %d is now eating dish %d\n", i, dish_id);
     dishes_set_state(dish_id, HALF);
     sleep(EAT_TIME);
     dishes_set_state(dish_id, EMPTY);
@@ -32,12 +34,15 @@ void children_eat(int i, int dish_id) {
 
 void children_finish_eating(int i) {
     children[i].state = PLAYING;
+    printf("Children %d is now playing\n", i);
     children_play(i);
 }
 
 void children_ready_to_eat(int i) {
     children[i].state = HUNGRY;
+    printf("Children %d state is now hungry\n", i);
     int dish_id = dishes_get_full_dish();
+    printf("Children %d found empty dish %d\n", i, dish_id);
     children_eat(i, dish_id);
 
 }
@@ -45,6 +50,7 @@ void children_ready_to_eat(int i) {
 void children_play(int i) {
     children[i].state = PLAYING;
     sleep(PLAY_TIME);
+    printf("Children %d play finished\n", i);
 }
 
 
@@ -62,7 +68,6 @@ void *run(void *element) {
     int i = *((int *) element);
 
     while(1) {
-        printf("Running child %d\n", i);
         children_ready_to_eat(i);
     }
 }

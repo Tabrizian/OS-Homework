@@ -1,7 +1,12 @@
 #include <stdlib.h>
+#include <pthread.h>
+#include <stdio.h>
 
 #include "mother.h"
 #include "dish.h"
+
+pthread_mutex_t mutex_set_state = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutex_full_dishes = PTHREAD_MUTEX_INITIALIZER;
 
 int capacity;
 
@@ -10,7 +15,7 @@ void dishes_init(int size) {
     dishes = malloc(sizeof(struct dish) * capacity);
 
     for(int i = 0; i < size; i++) {
-        dishes[i].state = FULL;
+        dishes[i].state = EMPTY;
     }
 }
 
@@ -19,7 +24,10 @@ int dishes_get_state(int i) {
 }
 
 void dishes_set_state(int i, int state) {
+    pthread_mutex_lock(&mutex_set_state);
+    printf("Set dish %d state to %d\n", i, state);
     dishes[i].state = state;
+    pthread_mutex_unlock(&mutex_set_state);
 }
 
 int dishes_get_size() {
@@ -32,14 +40,35 @@ void dishes_delete() {
 
 int dishes_get_full_dish() {
 
+    pthread_mutex_lock(&mutex_full_dishes);
+    int return_value = -1;
     while(1) {
+
         for(int i = 0; i < capacity; i++) {
             if(dishes[i].state == FULL) {
-                return i;
+                printf("Found dish %d\n", i);
+                return_value = i;
+                break;
             }
         }
 
-        mother_fill_dishes();
+        if(return_value != -1) {
+            break;
+        }
+
+        int k = 0;
+        for(int i = 0; i < capacity; i++) {
+            if(dishes[i].state == EMPTY) {
+                k++;
+            }
+        }
+
+        if(k == capacity) {
+            printf("Waking up mother to fill the dishes\n");
+            mother_fill_dishes();
+        }
     }
 
+    pthread_mutex_unlock(&mutex_full_dishes);
+    return return_value;
 }
