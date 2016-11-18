@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+#include "mother.h"
 #include "dish.h"
 
 int capacity;
@@ -27,4 +28,18 @@ int dishes_get_size() {
 
 void dishes_delete() {
     free(dishes);
+}
+
+int dishes_get_full_dish() {
+
+    while(1) {
+        for(int i = 0; i < capacity; i++) {
+            if(dishes[i].state == FULL) {
+                return i;
+            }
+        }
+
+        mother_fill_dishes();
+    }
+
 }
