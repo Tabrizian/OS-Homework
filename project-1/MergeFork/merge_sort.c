@@ -7,6 +7,7 @@
 #include <sys/shm.h>
 int b[10000];
 int *shm_array;
+int M=10;//when the subArray has less than M member we stop forking
 
 void merge_sort( int start, int end);
 void merge( int start, int mid, int end);
@@ -49,7 +50,10 @@ void merge_sort( int start, int end){
     int mid = (start+end)/2;
     int status;
     int lchild,rchild;
-    lchild = fork();
+	int length = end - start +1 ;
+	
+	if(length > M){
+	lchild = fork();
 
     if (lchild < 0) {
         perror("fork");
@@ -72,6 +76,12 @@ void merge_sort( int start, int end){
     waitpid(lchild, &status, 0);
     waitpid(rchild, &status, 0);
     merge( start, mid, end);
+	}
+	else{
+	merge_sort( start, mid);
+	merge_sort( mid+1, end);
+	merge( start, mid, end);
+	}
 }
 
 void merge(int start, int mid, int end) {
