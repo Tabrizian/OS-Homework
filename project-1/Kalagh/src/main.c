@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "dish.h"
+#include "child.h"
 
 void print_begin_message(int m, int n, int t) {
     printf("There are %d baby crows, %d feeding pots, and %d feedings\n", m,
@@ -28,4 +29,10 @@ int main() {
     print_begin_message(m, n, t);
 
     dishes_init(m);
+    children_init(n);
+
+    for(int i = 0; i < n; i++) {
+        children_run(i);
+    }
+
 }
