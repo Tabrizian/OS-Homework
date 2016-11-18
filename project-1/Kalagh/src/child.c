@@ -6,9 +6,11 @@
 #include "child.h"
 #include "dish.h"
 
+int capacity;
 
 void children_init(int size) {
     children = malloc(sizeof(struct child) * size);
+    capacity = size;
 
 }
 
@@ -45,8 +47,15 @@ void children_play(int i) {
     sleep(PLAY_TIME);
 }
 
+
 void children_delete() {
     free(children);
+}
+
+void children_finish() {
+    for (int i = 0; i < capacity; i++) {
+        pthread_join(children[i].thread, NULL);
+    }
 }
 
 void *run(void *element) {

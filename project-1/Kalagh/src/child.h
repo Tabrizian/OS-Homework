@@ -22,6 +22,7 @@ void children_finish_eating(int i);
 void children_ready_to_eat(int i);
 void children_play(int i);
 void children_delete();
+void children_finish();
 
 void *run(void *element);
 

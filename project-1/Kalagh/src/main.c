@@ -35,4 +35,8 @@ int main() {
         children_run(i);
     }
 
+    children_finish();
+
+
+    return 0;
 }
