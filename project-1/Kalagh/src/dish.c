@@ -21,6 +21,10 @@ void dishes_set_state(int i, int state) {
     dishes[i].state = state;
 }
 
+int dishes_get_size() {
+    return capacity;
+}
+
 void dishes_delete() {
     free(dishes);
 }

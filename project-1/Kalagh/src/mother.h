@@ -4,11 +4,16 @@
 #define MOM_ASLEEP 0
 #define FOOD_GATHER 10
 
-#include "dish.h"
-
 struct mother {
     int state;
 };
 
-void mother_fill_dishes(struct mother *mom, struct dish dishes[], int size);
+struct mother mom;
+
+void mother_init();
+void mother_goto_sleep();
+void mother_food_ready();
+void mother_fill_dishes();
+void mother_wake_up();
+
 #endif
