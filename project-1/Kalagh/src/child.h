@@ -10,8 +10,18 @@
 
 struct child {
     int state;
+    pthread_t thread;
 };
 
-void child_eat(struct child *current_child);
+struct child *children;
+
+void children_init(int size);
+void children_run(int i);
+void children_eat(int i);
+void children_finish_eating(int i);
+void children_ready_to_eat(int i);
+void children_delete();
+
+void *run(void *element);
 
 #endif

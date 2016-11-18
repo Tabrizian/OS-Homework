@@ -27,5 +27,5 @@ int main() {
 
     print_begin_message(m, n, t);
 
-    struct dish *dishes = malloc(sizeof(struct dish) * m);
+    dishes_init(m);
 }
