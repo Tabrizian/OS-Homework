@@ -40,12 +40,11 @@ void dishes_delete() {
     free(dishes);
 }
 
-int dishes_get_full_dish() {
+int dishes_get_full_dish(int i) {
 
     int return_value = -1;
     pthread_mutex_lock(&mutex_full_dishes);
 
-    printf("We are inside the mutex\n");
     while(1) {
 
         for(int i = 0; i < capacity; i++) {
@@ -69,6 +68,7 @@ int dishes_get_full_dish() {
 
 
         if(k == capacity) {
+            printf("Child %d woke up mom\n", i);
             printf("Waking up mother to fill the dishes\n");
             mother_fill_dishes();
         }

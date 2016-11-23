@@ -34,6 +34,7 @@ int main() {
     mother_init(t);
 
     for(int i = 0; i < n; i++) {
+        printf("Trying to create %d thread\n", i);
         children_run(i);
     }
 
