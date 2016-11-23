@@ -8,17 +8,23 @@
 #include "dish.h"
 
 pthread_mutex_t mutex_thread = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutex_run = PTHREAD_MUTEX_INITIALIZER;
+int *sth;
 int num;
 
 void children_init(int size) {
     children = malloc(sizeof(struct child) * size);
+    sth = malloc(sizeof(int) * size);
     num = size;
+
+    for(int i = 0; i < size; i++) {
+        sth[i] = 0;
+    }
 
 }
 
 void children_run(int i) {
 
-    pthread_mutex_lock(&mutex_thread);
     int d = i;
     printf("Child %d\n", i);
     int rc = pthread_create(&(children[i].thread), NULL, &run, (void *) &d);
@@ -26,7 +32,6 @@ void children_run(int i) {
     if(rc) {
         printf("Error pthread_create() return code: %d\n", rc);
     }
-    pthread_mutex_unlock(&mutex_thread);
 }
 
 void children_eat(int i, int dish_id) {
@@ -71,10 +76,19 @@ void children_finish() {
 }
 
 void *run(void *element) {
+    pthread_mutex_lock(&mutex_thread);
     int i = *((int *) element);
+    for(int j = 0; j < num; j++) {
+        if(sth[j] == 0) {
+            i = j;
+            sth[j] = 1;
+            break;
+        }
+    }
 
     printf("Child run %d\n", i);
     printf("Thread for child %d created\n", i);
+    pthread_mutex_unlock(&mutex_thread);
     while(1) {
         children_ready_to_eat(i);
     }
