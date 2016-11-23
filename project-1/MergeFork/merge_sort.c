@@ -6,7 +6,7 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/time.h>
-int b[10000];
+int b[10000];//temp array for help to merging in merge sort!
 int *shm_array;
 int M=1000;//when the subArray has less than M member we stop forking
 
