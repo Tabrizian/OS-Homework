@@ -20,7 +20,7 @@ static void
 datetime_1(struct svc_req *rqstp, register SVCXPRT *transp)
 {
 	union {
-		date add_1_arg;
+		int fill;
 	} argument;
 	char *result;
 	xdrproc_t _xdr_argument, _xdr_result;
@@ -31,10 +31,10 @@ datetime_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		(void) svc_sendreply (transp, (xdrproc_t) xdr_void, (char *)NULL);
 		return;
 
-	case ADD:
-		_xdr_argument = (xdrproc_t) xdr_date;
-		_xdr_result = (xdrproc_t) xdr_int;
-		local = (char *(*)(char *, struct svc_req *)) add_1_svc;
+	case GETDATE:
+		_xdr_argument = (xdrproc_t) xdr_void;
+		_xdr_result = (xdrproc_t) xdr_result;
+		local = (char *(*)(char *, struct svc_req *)) getdate_1_svc;
 		break;
 
 	default:

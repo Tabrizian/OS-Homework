@@ -11,8 +11,8 @@ void
 datetime_1(char *host)
 {
 	CLIENT *clnt;
-	int  *result_1;
-	date  add_1_arg;
+	struct result  *result_1;
+	char *getdate_1_arg;
 
 #ifndef	DEBUG
 	clnt = clnt_create (host, DATETIME, DATETIME_1, "udp");
@@ -22,10 +22,11 @@ datetime_1(char *host)
 	}
 #endif	/* DEBUG */
 
-	result_1 = add_1(&add_1_arg, clnt);
-	if (result_1 == (int *) NULL) {
+	result_1 = getdate_1((void*)&getdate_1_arg, clnt);
+	if (result_1 == (struct result *) NULL) {
 		clnt_perror (clnt, "call failed");
 	}
+    printf("Date time on server side is %s\n", result_1->res);
 #ifndef	DEBUG
 	clnt_destroy (clnt);
 #endif	 /* DEBUG */

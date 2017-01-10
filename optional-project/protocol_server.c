@@ -4,16 +4,21 @@
  * as a guideline for developing your own functions.
  */
 
+#include <stdio.h>
+#include <time.h>
+
 #include "protocol.h"
 
-int *
-add_1_svc(date *argp, struct svc_req *rqstp)
+    struct result *
+getdate_1_svc(void *argp, struct svc_req *rqstp)
 {
-	static int  result;
+    static struct result  result;
+    time_t rawtime;
+    struct tm * timeinfo;
 
-	/*
-	 * insert server code here
-	 */
+    time(&rawtime);
+    timeinfo = localtime (&rawtime);
+    strcpy(result.res, asctime(timeinfo));
 
-	return &result;
+    return &result;
 }

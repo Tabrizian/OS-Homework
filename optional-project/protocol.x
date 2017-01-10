@@ -1,9 +1,9 @@
-struct date {
-    char *format;
+struct result {
+    char res[100];
+    int len;
 };
-
 program DATETIME {
     version DATETIME_1 {
-        int ADD(date) = 1;
+        struct result GETDATE() = 1;
     } = 1;
 } = 0x2fffffff;

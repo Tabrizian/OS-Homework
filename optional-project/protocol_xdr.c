@@ -6,11 +6,15 @@
 #include "protocol.h"
 
 bool_t
-xdr_date (XDR *xdrs, date *objp)
+xdr_result (XDR *xdrs, result *objp)
 {
 	register int32_t *buf;
 
-	 if (!xdr_pointer (xdrs, (char **)&objp->format, sizeof (char), (xdrproc_t) xdr_char))
+	int i;
+	 if (!xdr_vector (xdrs, (char *)objp->res, 100,
+		sizeof (char), (xdrproc_t) xdr_char))
+		 return FALSE;
+	 if (!xdr_int (xdrs, &objp->len))
 		 return FALSE;
 	return TRUE;
 }
