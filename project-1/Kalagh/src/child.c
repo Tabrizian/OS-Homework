@@ -26,7 +26,6 @@ void children_init(int size) {
 void children_run(int i) {
 
     int d = i;
-    printf("Child %d\n", i);
     int rc = pthread_create(&(children[i].thread), NULL, &run, (void *) &d);
 
     if(rc) {
@@ -36,6 +35,9 @@ void children_run(int i) {
 
 void children_eat(int i, int dish_id) {
     children[i].state = EATING;
+    for(int j = 0; j < i; j++) {
+        printf(" ");
+    }
     printf("Children %d is now eating dish %d\n", i, dish_id);
     dishes_set_state(dish_id, HALF);
     sleep(EAT_TIME);
@@ -51,8 +53,14 @@ void children_finish_eating(int i) {
 
 void children_ready_to_eat(int i) {
     children[i].state = HUNGRY;
+    for(int j = 0; j < i; j++) {
+        printf(" ");
+    }
     printf("Children %d state is now hungry\n", i);
     int dish_id = dishes_get_full_dish(i);
+    for(int j = 0; j < i; j++) {
+        printf(" ");
+    }
     printf("Children %d found empty dish %d\n", i, dish_id);
     children_eat(i, dish_id);
 
@@ -61,6 +69,9 @@ void children_ready_to_eat(int i) {
 void children_play(int i) {
     children[i].state = PLAYING;
     sleep(PLAY_TIME);
+    for(int j = 0; j < i; j++) {
+        printf(" ");
+    }
     printf("Children %d play finished\n", i);
 }
 
@@ -77,7 +88,7 @@ void children_finish() {
 
 void *run(void *element) {
     pthread_mutex_lock(&mutex_thread);
-    int i = *((int *) element);
+    int i = ((int *) element);
     for(int j = 0; j < num; j++) {
         if(sth[j] == 0) {
             i = j;
@@ -86,7 +97,6 @@ void *run(void *element) {
         }
     }
 
-    printf("Child run %d\n", i);
     printf("Thread for child %d created\n", i);
     pthread_mutex_unlock(&mutex_thread);
     while(1) {

@@ -17,13 +17,13 @@ void merge( int start, int mid, int end);
 int main(int argc, char *argv[]){
 	/* for Measuring time*/
 	struct timeval start, end;
-    long mtime, seconds, useconds;    
+    long mtime, seconds, useconds;
     gettimeofday(&start, NULL);
 	/* starting declare shared Memory*/
-	key_t key;/* key to be passed to shmget() */ 
-	int shmflg;/* shmflg to be passed to shmget() */ 
-	int shmid;/* return value from shmget() */ 
-	int size;/* size to be passed to shmget() */ 
+	key_t key;/* key to be passed to shmget() */
+	int shmflg;/* shmflg to be passed to shmget() */
+	int shmid;/* return value from shmget() */
+	int size;/* size to be passed to shmget() */
 	key = IPC_PRIVATE;
 	/* Create the shared memory segment. */
 	size = 10000 * sizeof(int);
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]){
 	/*
 	* Copy the data to be sorted from the local memory into the shared memory.
 	*/
-	
+
 	/* read inputs from file*/
 	FILE *fp;
 	fp = fopen("./test.txt", "r");
@@ -49,15 +49,15 @@ int main(int argc, char *argv[]){
 		shm_array[i] =a;
 	}
 	fclose(fp);
-	
-	
-	
-	
-	
+
+
+
+
+
 	merge_sort( 0,9999);
-	/*for(int i=0;i<10000;i++){
+	for(int i=0;i<10000;i++){
         	printf("%d is %d\n",i,shm_array[i]);
-	}*/
+	}
 	gettimeofday(&end, NULL);
 
     seconds  = end.tv_sec  - start.tv_sec;
@@ -76,7 +76,7 @@ void merge_sort( int start, int end){
     int status;
     int lchild,rchild;
 	int length = end - start +1 ;
-	
+
 	// if the size of subArray is greater than M then we fork
 	if(length > M){
 	lchild = fork();
